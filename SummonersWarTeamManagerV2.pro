@@ -1,4 +1,7 @@
-QT       += core gui
+QT       += \
+    core \
+    gui \
+    network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -9,14 +12,38 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    areamenu.cpp \
+    boxmenu.cpp \
     main.cpp \
-    teammanager.cpp
+    mainmenu.cpp \
+    monster.cpp \
+    monsterlistview.cpp \
+    profile.cpp \
+    team.cpp \
+    teamlistview.cpp \
+    teammanager.cpp \
+    teammenu.cpp
 
 HEADERS += \
-    teammanager.h
+    areamenu.h \
+    boxmenu.h \
+    mainmenu.h \
+    monster.h \
+    monsterlistview.h \
+    profile.h \
+    team.h \
+    teamlistview.h \
+    teammanager.h \
+    teammenu.h
 
 FORMS += \
-    teammanager.ui
+    areamenu.ui \
+    boxmenu.ui \
+    mainmenu.ui \
+    monsterlistview.ui \
+    teamlistview.ui \
+    teammanager.ui \
+    teammenu.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
