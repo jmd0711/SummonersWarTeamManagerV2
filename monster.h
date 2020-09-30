@@ -8,7 +8,6 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QPixmap>
-#include <QFile>
 
 class Monster : public QObject
 {

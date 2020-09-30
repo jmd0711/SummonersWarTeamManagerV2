@@ -29,6 +29,8 @@ public:
 
     void addMonster(Monster *mon);
 
+    void addTeam(Team *team);
+
     int getMonsterCount();
 
     const Monster* getMonster(int index) const;
@@ -41,6 +43,7 @@ signals:
     void monsterAdded();
     void monsterDeleted(int index);
     void monsterUpdated(int index);
+    void teamAdded(QString battle);
 
 private:
     QVector<Monster *> monsters_m;

@@ -53,13 +53,20 @@ QJsonDocument Profile::getJsonProfile()
 void Profile::loadProfile(QJsonDocument &doc)
 {
     QJsonObject obj = doc.object();
-    QJsonArray array = obj["monsters"].toArray();
-    foreach (const QJsonValue &value, array)
+    QJsonArray monArray = obj["monsters"].toArray();
+    foreach (const QJsonValue &value, monArray)
     {
         Monster *mon = new Monster(value.toObject(), Monster::PROFILE);
         addMonster(mon);
     }
     //  TODO TEAMS
+
+    QJsonArray teamsArray = obj["teams"].toArray();
+    foreach (const QJsonValue &value, teamsArray)
+    {
+        Team *team = new Team(value.toObject());
+        addTeam(team);
+    }
 }
 
 void Profile::clear()
@@ -86,6 +93,12 @@ void Profile::addMonster(Monster *mon)
     connect(mon, &Monster::updated, this, &Profile::onMonsterUpdated);
     //connect(mon, &Monster::monsterDeleted, this, &MonsterData::onMonsterDeleted);
     emit monsterAdded();
+}
+
+void Profile::addTeam(Team *team)
+{
+    teams_m.push_back(team);
+    emit teamAdded(team->getBattle());
 }
 
 int Profile::getMonsterCount()
