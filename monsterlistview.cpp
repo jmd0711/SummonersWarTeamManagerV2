@@ -42,10 +42,12 @@ void MonsterListView::addButton()
     QPalette palette = button->palette();
     palette.setColor(QPalette::Button, QColor(0, 0, 0));
     button->setPalette(palette);
-    button->setIconSize(QSize(140,140));
+    button->setIconSize(QSize(145,145));
+    button->setAttribute(Qt::WA_DeleteOnClose);
 
     layout->addWidget(button, row, column);
 
+    connect(button, &QToolButton::released, this, &MonsterListView::onButtonReleased);
     buttonCount++;
     updateButton(buttonCount - 1);
 }
@@ -75,8 +77,6 @@ void MonsterListView::updateButton(int index)
     QToolButton *button = dynamic_cast<QToolButton *>(widget);
 
     button->setIcon(profile->getMonster(index)->getImage());
-    button->disconnect();
-    //connect(button, &QToolButton::released,)
 }
 
 void MonsterListView::onMonsterAdded()
@@ -94,4 +94,22 @@ void MonsterListView::onMonsterDeleted(int index)
 void MonsterListView::onMonsterUpdated(int index)
 {
     updateButton(index);
+}
+
+void MonsterListView::onButtonReleased()
+{
+    QToolButton *button = dynamic_cast<QToolButton *>(sender());
+    int index =layout->indexOf(button);
+
+    MonsterDisplay *disp;
+    switch(purpose)
+    {
+    case MonsterListView::BOX:
+         disp = new MonsterDisplay(profile, profile->getMonster(index), MonsterDisplay::DELETE, this);
+         connect(disp, &MonsterDisplay::deleteReleased, profile, &Profile::onMonsterDeleteReleased);
+        break;
+    case MonsterListView::REQUEST:
+        disp = new MonsterDisplay(profile, profile->getMonster(index), MonsterDisplay::ADD, this);
+    }
+    disp->show();
 }

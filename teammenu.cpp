@@ -10,9 +10,10 @@ TeamMenu::TeamMenu(Profile *pr, QString name, QWidget *parent) :
     ui->setupUi(this);
     ui->label->setText(battleName);
 
-    teamListWidget = new TeamListView(profile, this);
+    teamListWidget = new TeamListView(profile, battleName, this);
     ui->scrollArea->setWidgetResizable(true);
     ui->scrollArea->setWidget(teamListWidget);
+    ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
 TeamMenu::~TeamMenu()

@@ -26,23 +26,23 @@ TeamManager::TeamManager(QWidget *parent)
     arenaPage = new AreaMenu(nextPos, arenaNames, this);
     layout->addWidget(arenaPage);
     foreach (QString battleName, arenaNames)
-        layout->addWidget(new TeamMenu(battleName, this));
+        layout->addWidget(new TeamMenu(profile, battleName, this));
 
     QVector<QString> guildNames = {"Guild Offense", "Guild Defense"}; //5
     nextPos = layout->count();
     guildPage = new AreaMenu(layout->count(), guildNames, this);
     layout->addWidget(guildPage);
     foreach (QString battleName, guildNames)
-        layout->addWidget(new TeamMenu(battleName, this));
+        layout->addWidget(new TeamMenu(profile, battleName, this));
 
     QVector<QString> siegeNames = {"Siege Offense", "Siege Defense"}; //8
     nextPos = layout->count();
     siegePage = new AreaMenu(layout->count(), siegeNames, this);
     layout->addWidget(siegePage);
     foreach (QString battleName, siegeNames)
-        layout->addWidget(new TeamMenu(battleName, this));
+        layout->addWidget(new TeamMenu(profile, battleName, this));
 
-    tartarusPage = new TeamMenu("Tartarus Labyrinth", this);  //  Not an AreaMenu //11
+    tartarusPage = new TeamMenu(profile, "Tartarus Labyrinth", this);  //  Not an AreaMenu //11
     layout->addWidget(tartarusPage);
 
     QVector<QString> cairosNames = {"Giants", "Dragons", "Necropolis", "Steel Fortress", "Punisher's Crypt",
@@ -51,23 +51,23 @@ TeamManager::TeamManager(QWidget *parent)
     cairosPage = new AreaMenu(layout->count(), cairosNames, this);
     layout->addWidget(cairosPage);
     foreach (QString battleName, cairosNames)
-        layout->addWidget(new TeamMenu(battleName, this));
+        layout->addWidget(new TeamMenu(profile, battleName, this));
 
     QVector<QString> dimensionalNames = {"Karzhan", "Ellunia", "Lumel"}; //24
     nextPos = layout->count();
     dimensionalPage = new AreaMenu(layout->count(), dimensionalNames, this);
     layout->addWidget(dimensionalPage);
     foreach (QString battleName, dimensionalNames)
-        layout->addWidget(new TeamMenu(battleName, this));
+        layout->addWidget(new TeamMenu(profile, battleName, this));
 
     QVector<QString> riftNames = {"Rift Raid", "Light Beast", "Dark Beast", "Fire Beast", "Water Beast", "Wind Beast"}; //28
     nextPos = layout->count();
     riftPage = new AreaMenu(layout->count(), riftNames, this);
     layout->addWidget(riftPage);
     foreach (QString battleName, riftNames)
-        layout->addWidget(new TeamMenu(battleName, this));
+        layout->addWidget(new TeamMenu(profile, battleName, this));
 
-    towerPage = new TeamMenu("Tower of Ascension", this); //  Not an AreaMenu //35
+    towerPage = new TeamMenu(profile, "Tower of Ascension", this); //  Not an AreaMenu //35
     layout->addWidget(towerPage);
 
 

@@ -33,7 +33,20 @@ public:
 
     int getMonsterCount();
 
-    const Monster* getMonster(int index) const;
+    int getTeamsCount(QString battleName);
+
+    Monster* getMonster(int index);
+
+private:
+    void deleteMonster(int index);
+
+    QVector<Team *> getTeamsFiltered(QString battleName);
+
+    void deleteTeam(QString battleName, int indexFilteredByTeam);
+
+public slots:
+    void onMonsterDeleteReleased(int index);
+    void onTeamDeleteReleased(QString battleName, int indexFilteredByTeam);
 
 private slots:
     void onImport(QNetworkReply *reply);
@@ -44,6 +57,7 @@ signals:
     void monsterDeleted(int index);
     void monsterUpdated(int index);
     void teamAdded(QString battle);
+    void teamDeleted(QString battle);
 
 private:
     QVector<Monster *> monsters_m;

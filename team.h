@@ -29,7 +29,7 @@ private:
     QString battle_m;
     QString teamName_m;
     QString teamDescription_m;
-    QVector<int> monsterIndexes;
+    QVector<int> monsterIndexes_m;
 };
 
 #endif // TEAM_H

@@ -73,8 +73,7 @@ void Profile::clear()
 {
     while (monsters_m.count() > 0)
     {
-        delete monsters_m[0];
-        monsters_m.pop_front();
+        deleteMonster(monsters_m.count() - 1);
     }
 
     while (teams_m.count() > 0)
@@ -95,10 +94,52 @@ void Profile::addMonster(Monster *mon)
     emit monsterAdded();
 }
 
+void Profile::deleteMonster(int index)
+{
+    delete monsters_m[index];
+    monsters_m.erase(monsters_m.begin() + index);
+    for (int i = index; i < monsters_m.count(); i++)
+    {
+        monsters_m[i]->setIndex(i);
+    }
+    emit monsterDeleted(index);
+}
+
+QVector<Team *> Profile::getTeamsFiltered(QString battleName)
+{
+    QVector<Team *> teamsFiltered;
+    QVector<Team *>::iterator itr = teams_m.begin();
+    while ((itr = std::find_if(itr, teams_m.end(), [battleName](auto t){
+                                return (t->getBattle() == battleName);
+                                })) != teams_m.end())
+    {
+        teamsFiltered.push_back(*itr);
+        itr++;
+    }
+    return teamsFiltered;
+}
+
 void Profile::addTeam(Team *team)
 {
     teams_m.push_back(team);
     emit teamAdded(team->getBattle());
+}
+
+void Profile::deleteTeam(QString battleName, int indexFilteredByTeam)
+{
+
+    QVector<Team *> teamsFiltered = getTeamsFiltered(battleName);
+    Team *team = teamsFiltered[indexFilteredByTeam];
+    QVector<Team *>::iterator itr = std::find(teams_m.begin(), teams_m.end(), team);
+    if (itr != teams_m.end())
+    {
+        int index = std::distance(teams_m.begin(), itr);
+        delete teams_m[index];
+        teams_m.erase(teams_m.begin() + index);
+        emit teamDeleted(battleName);
+    }
+    else
+        qDebug() << "Team not deleted\n";
 }
 
 int Profile::getMonsterCount()
@@ -106,9 +147,24 @@ int Profile::getMonsterCount()
     return monsters_m.count();
 }
 
-const Monster* Profile::getMonster(int index) const
+int Profile::getTeamsCount(QString battleName)
+{
+    return getTeamsFiltered(battleName).count();
+}
+
+Monster* Profile::getMonster(int index)
 {
     return monsters_m[index];
+}
+
+void Profile::onMonsterDeleteReleased(int index)
+{
+    deleteMonster(index);
+}
+
+void Profile::onTeamDeleteReleased(QString battleName, int indexFilteredByTeam)
+{
+    deleteTeam(battleName, indexFilteredByTeam);
 }
 
 void Profile::onImport(QNetworkReply *reply)

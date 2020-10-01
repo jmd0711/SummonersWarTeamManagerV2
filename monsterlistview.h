@@ -6,6 +6,7 @@
 #include <QToolButton>
 
 #include "profile.h"
+#include "monsterdisplay.h"
 
 namespace Ui {
 class MonsterListView;
@@ -41,6 +42,8 @@ private slots:
     void onMonsterDeleted(int index);
 
     void onMonsterUpdated(int index);
+
+    void onButtonReleased();
 
 private:
     Ui::MonsterListView *ui;

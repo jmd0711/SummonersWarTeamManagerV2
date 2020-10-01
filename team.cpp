@@ -9,7 +9,7 @@ Team::Team(const QJsonObject &newTeam)
     QJsonArray indexes = newTeam["indexes"].toArray();
     foreach (const QJsonValue &value, indexes)
     {
-        monsterIndexes.push_back(value.toInt());
+        monsterIndexes_m.push_back(value.toInt());
     }
 }
 
@@ -47,10 +47,10 @@ void Team::setTeamDescription(const QString &value)
 
 void Team::addIndex(int monsterIndex)
 {
-    monsterIndexes.push_back(monsterIndex);
+    monsterIndexes_m.push_back(monsterIndex);
 }
 
 void Team::removeIndex(int monsterIndex)
 {
-    monsterIndexes.erase(std::remove(monsterIndexes.begin(), monsterIndexes.end(), monsterIndex), monsterIndexes.end());
+    monsterIndexes_m.erase(std::remove(monsterIndexes_m.begin(), monsterIndexes_m.end(), monsterIndex), monsterIndexes_m.end());
 }
