@@ -21,7 +21,7 @@ QJsonDocument Profile::getJsonProfile()
     QJsonObject saveObject;
 
     QJsonArray monstersJsonArray;
-    foreach (Monster* mon, monsters_m)
+    foreach (Monster *mon, monsters_m)
     {
         QJsonObject monsterJson;
         monsterJson.insert("name", mon->getName());
@@ -45,7 +45,22 @@ QJsonDocument Profile::getJsonProfile()
     }
     saveObject.insert("monsters", monstersJsonArray);
 
-    //  TODO TEAMS
+    QJsonArray teamsJsonArray;
+    foreach (Team *team, teams_m)
+    {
+        QJsonObject teamJson;
+        teamJson.insert("battle", team->getBattle());
+        teamJson.insert("name", team->getTeamName());
+        teamJson.insert("description", team->getTeamDescription());
+        QJsonArray indexesJsonArray;
+        foreach (int x, team->getMonsterIndexes())
+        {
+            indexesJsonArray.push_back(x);
+        }
+        teamJson.insert("indexes", indexesJsonArray);
+        teamsJsonArray.push_back(teamJson);
+    }
+    saveObject.insert("teams", teamsJsonArray);
     QJsonDocument doc(saveObject);
     return doc;
 }
@@ -59,7 +74,6 @@ void Profile::loadProfile(QJsonDocument &doc)
         Monster *mon = new Monster(value.toObject(), Monster::PROFILE);
         addMonster(mon);
     }
-    //  TODO TEAMS
 
     QJsonArray teamsArray = obj["teams"].toArray();
     foreach (const QJsonValue &value, teamsArray)
@@ -76,10 +90,10 @@ void Profile::clear()
         deleteMonster(monsters_m.count() - 1);
     }
 
+    QMap<QString, int> battleCount;
     while (teams_m.count() > 0)
     {
-        delete teams_m[0];
-        teams_m.pop_front();
+        deleteTeam(teams_m[0]->getBattle(), 0);
     }
 }
 
@@ -96,6 +110,15 @@ void Profile::addMonster(Monster *mon)
 
 void Profile::deleteMonster(int index)
 {
+    QMap<QString, int> battleCount;
+    foreach (Team *team, teams_m)
+    {
+        if (team->exists(index))
+        {
+            //team->removeIndex(index);
+            onMonsterRemoveReleased(team->getBattle(), battleCount[team->getBattle()]++, index);
+        }
+    }
     delete monsters_m[index];
     monsters_m.erase(monsters_m.begin() + index);
     for (int i = index; i < monsters_m.count(); i++)
@@ -136,7 +159,7 @@ void Profile::deleteTeam(QString battleName, int indexFilteredByTeam)
         int index = std::distance(teams_m.begin(), itr);
         delete teams_m[index];
         teams_m.erase(teams_m.begin() + index);
-        emit teamDeleted(battleName);
+        emit teamDeleted(indexFilteredByTeam, battleName);
     }
     else
         qDebug() << "Team not deleted\n";
@@ -145,6 +168,13 @@ void Profile::deleteTeam(QString battleName, int indexFilteredByTeam)
 int Profile::getMonsterCount()
 {
     return monsters_m.count();
+}
+
+int Profile::getMonsterCount(QString battleName, int indexFiltered)
+{
+    QVector<Team *> teamsFiltered = getTeamsFiltered(battleName);
+    Team *team = teamsFiltered[indexFiltered];
+    return team->getMonsterIndexes().count();
 }
 
 int Profile::getTeamsCount(QString battleName)
@@ -157,9 +187,65 @@ Monster* Profile::getMonster(int index)
     return monsters_m[index];
 }
 
+Team *Profile::getTeam(QString battleName, int indexFiltered)
+{
+    QVector<Team *> teamsFiltered = getTeamsFiltered(battleName);
+    Team *team = teamsFiltered[indexFiltered];
+    return team;
+}
+
+bool Profile::teamExists(QString battleName, int indexFiltered)
+{
+    QVector<Team *> teamsFiltered = getTeamsFiltered(battleName);
+    Team *team = teamsFiltered[indexFiltered];
+    return team;
+}
+
+bool Profile::existsInTeam(QString battleName, int indexFiltered, int monsterIndex)
+{
+    QVector<Team *> teamsFiltered = getTeamsFiltered(battleName);
+    Team *team = teamsFiltered[indexFiltered];
+    return team->exists(monsterIndex);
+}
+
+QVector<int> Profile::getMonsterIndexes(QString battleName, int indexFiltered)
+{
+    QVector<Team *> teamsFiltered = getTeamsFiltered(battleName);
+    Team *team = teamsFiltered[indexFiltered];
+    return team->getMonsterIndexes();
+}
+
 void Profile::onMonsterDeleteReleased(int index)
 {
     deleteMonster(index);
+}
+
+void Profile::onMonsterAddReleased(QString battleName, int indexFiltered, int monsterIndex)
+{
+    QVector<Team *> teamsFiltered = getTeamsFiltered(battleName);
+    Team *team = teamsFiltered[indexFiltered];
+    QVector<Team *>::iterator itr = std::find(teams_m.begin(), teams_m.end(), team);
+    if (itr != teams_m.end())
+    {
+//        int teamIndex = std::distance(teams_m.begin(), itr);
+//        teams_m[teamIndex]->addIndex(monsterIndex);
+        team->addIndex(monsterIndex);
+        emit monsterAddedToTeam(battleName, indexFiltered, monsterIndex);
+    }
+}
+
+void Profile::onMonsterRemoveReleased(QString battleName, int indexFiltered, int monsterIndex)
+{
+    QVector<Team *> teamsFiltered = getTeamsFiltered(battleName);
+    Team *team = teamsFiltered[indexFiltered];
+    QVector<Team *>::iterator itr = std::find(teams_m.begin(), teams_m.end(), team);
+    if (itr != teams_m.end())
+    {
+//        int teamIndex = std::distance(teams_m.begin(), itr);
+//        teams_m[teamIndex]->
+        team->removeIndex(monsterIndex);
+        emit monsterRemovedFromTeam(battleName, indexFiltered, monsterIndex);
+    }
 }
 
 void Profile::onTeamDeleteReleased(QString battleName, int indexFilteredByTeam)

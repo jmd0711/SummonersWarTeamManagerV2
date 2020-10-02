@@ -29,10 +29,16 @@ TeamListView::~TeamListView()
 
 void TeamListView::addTeam()
 {
-    TeamWidget *teamWidget = new TeamWidget(profile, battleName, teamCount, this);
+    int initialCount;
+    if (profile->teamExists(battleName, teamCount))
+        initialCount = profile->getMonsterCount(battleName, teamCount);
+    else
+        initialCount = 0;
+    TeamWidget *teamWidget = new TeamWidget(profile, battleName, teamCount, initialCount, this);
     connect(teamWidget, &TeamWidget::deleteReleased, profile, &Profile::onTeamDeleteReleased);
 
     layout->addWidget(teamWidget);
+    //teamWidget->setMonsterCount(profile->getMonsterCount(battleName, teamCount));
     teamCount++;
 }
 
@@ -56,10 +62,17 @@ void TeamListView::onTeamAdded(QString name)
     }
 }
 
-void TeamListView::onTeamDeleted(QString name)
+void TeamListView::onTeamDeleted(int indexFiltered, QString name)
 {
     if (name == battleName)
     {
         deleteTeam();
+        for (int i = indexFiltered; i < teamCount; i++)
+        {
+            QLayoutItem *item = layout->itemAt(i);
+            QWidget *widget = item->widget();
+            TeamWidget *teamWidget = dynamic_cast<TeamWidget *>(widget);
+            teamWidget->setTeamIndex(teamWidget->getTeamIndex() - 1);
+        }
     }
 }

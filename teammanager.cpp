@@ -88,20 +88,30 @@ void TeamManager::addToLayout(QWidget *widget)
 
 void TeamManager::setPage(int index)
 {
-    if (index == 0)
-    {
-        ui->backButton->setDisabled(true);
-        ui->mainButton->setDisabled(false);
-    }
-    else
-    {
-        ui->backButton->setDisabled(false);
-        ui->mainButton->setDisabled(false);
-    }
-    ui->boxButton->setDisabled(false);
     layout->setCurrentIndex(index);
     lastPageStack.push_back(lastPageIndex);
     lastPageIndex = layout->currentIndex();
+
+    if (lastPageStack.isEmpty())
+        ui->backButton->setDisabled(true);
+    else
+        ui->backButton->setDisabled(false);
+
+    if (layout->currentIndex() == 0)
+    {
+        ui->mainButton->setDisabled(true);
+        ui->boxButton->setDisabled(false);
+    }
+    else if (layout->currentIndex() == 1)
+    {
+        ui->mainButton->setDisabled(false);
+        ui->boxButton->setDisabled(true);
+    }
+    else
+    {
+        ui->mainButton->setDisabled(false);
+        ui->boxButton->setDisabled(false);
+    }
 }
 
 void TeamManager::on_backButton_released()
@@ -112,14 +122,24 @@ void TeamManager::on_backButton_released()
     lastPageStack.pop_back();
 
     if (lastPageStack.isEmpty())
-    {
         ui->backButton->setDisabled(true);
+    else
+        ui->backButton->setDisabled(false);
+
+    if (layout->currentIndex() == 0)
+    {
         ui->mainButton->setDisabled(true);
+        ui->boxButton->setDisabled(false);
+    }
+    else if (layout->currentIndex() == 1)
+    {
+        ui->mainButton->setDisabled(false);
+        ui->boxButton->setDisabled(true);
     }
     else
     {
-        ui->backButton->setDisabled(false);
         ui->mainButton->setDisabled(false);
+        ui->boxButton->setDisabled(false);
     }
 }
 
@@ -200,4 +220,14 @@ void TeamManager::on_actionImport_triggered()
 {
     QString profileName = QInputDialog::getText(this, "Import From Swarfarm", "What is your profile name?");
     profile->importFromSFProfile(profileName);
+}
+
+void TeamManager::on_actionAbout_triggered()
+{
+    QString info =  "Summoner's War Team Manager V2.0\n\n"
+                    "Copyright 2020, Jasper Matthew Dumdumaya, all rights reserved.\n\n"
+                    "Application is created using Qt 5.15.1 and Qt Creator 4.13.1\n\n"
+                    "Images are owned by COM2US.\n"
+                    "Data is gathered from SWARFARM.\n";
+    QMessageBox::information(this, "About", info);
 }

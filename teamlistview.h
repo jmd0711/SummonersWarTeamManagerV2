@@ -26,7 +26,7 @@ public:
 private slots:
     void onTeamAdded(QString name);
 
-    void onTeamDeleted(QString name);
+    void onTeamDeleted(int indexFiltered, QString name);
 
 private:
     Ui::TeamListView *ui;

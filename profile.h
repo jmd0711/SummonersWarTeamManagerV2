@@ -33,9 +33,19 @@ public:
 
     int getMonsterCount();
 
+    int getMonsterCount(QString battleName, int indexFiltered);
+
     int getTeamsCount(QString battleName);
 
     Monster* getMonster(int index);
+
+    Team* getTeam(QString battleName, int indexFiltered);
+
+    bool teamExists(QString battleName, int indexFiltered);
+
+    bool existsInTeam(QString battleName, int indexFiltered, int monsterIndex);
+
+    QVector<int> getMonsterIndexes(QString battleName, int indexFiltered);
 
 private:
     void deleteMonster(int index);
@@ -46,6 +56,8 @@ private:
 
 public slots:
     void onMonsterDeleteReleased(int index);
+    void onMonsterAddReleased(QString battleName, int indexFiltered, int monsterIndex);
+    void onMonsterRemoveReleased(QString battleName, int indexFiltered, int monsterIndex);
     void onTeamDeleteReleased(QString battleName, int indexFilteredByTeam);
 
 private slots:
@@ -57,7 +69,9 @@ signals:
     void monsterDeleted(int index);
     void monsterUpdated(int index);
     void teamAdded(QString battle);
-    void teamDeleted(QString battle);
+    void teamDeleted(int indexFiltered, QString battle);
+    void monsterAddedToTeam(QString battle, int indexFiltered, int monsterIndex);
+    void monsterRemovedFromTeam(QString battle, int indexFiltered, int monsterIndex);
 
 private:
     QVector<Monster *> monsters_m;

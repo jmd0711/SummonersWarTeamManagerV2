@@ -19,8 +19,10 @@ SOURCES += \
     monster.cpp \
     monsterdisplay.cpp \
     monsterlistview.cpp \
+    monsterrequest.cpp \
     profile.cpp \
     team.cpp \
+    teamdisplay.cpp \
     teamlistview.cpp \
     teammanager.cpp \
     teammenu.cpp \
@@ -33,8 +35,10 @@ HEADERS += \
     monster.h \
     monsterdisplay.h \
     monsterlistview.h \
+    monsterrequest.h \
     profile.h \
     team.h \
+    teamdisplay.h \
     teamlistview.h \
     teammanager.h \
     teammenu.h \
@@ -46,6 +50,8 @@ FORMS += \
     mainmenu.ui \
     monsterdisplay.ui \
     monsterlistview.ui \
+    monsterrequest.ui \
+    teamdisplay.ui \
     teamlistview.ui \
     teammanager.ui \
     teammenu.ui \

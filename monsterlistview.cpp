@@ -110,6 +110,53 @@ void MonsterListView::onButtonReleased()
         break;
     case MonsterListView::REQUEST:
         disp = new MonsterDisplay(profile, profile->getMonster(index), MonsterDisplay::ADD, this);
+        connect(disp, &MonsterDisplay::addReleased, profile, &Profile::onMonsterAddReleased);
+        break;
     }
     disp->show();
+}
+
+int MonsterListView::getTeamIndex() const
+{
+    switch (purpose)
+    {
+    case MonsterListView::BOX:
+        return NULL;
+    case MonsterListView::REQUEST:
+        return teamIndex;
+    }
+}
+
+void MonsterListView::setTeamIndex(int value)
+{
+    switch (purpose)
+    {
+    case MonsterListView::BOX:
+        return;
+    case MonsterListView::REQUEST:
+        teamIndex = value;
+        break;
+    }
+}
+
+QString MonsterListView::getBattleName() const
+{
+    switch (purpose)
+    {
+    case MonsterListView::BOX:
+        return NULL;
+    case MonsterListView::REQUEST:
+        return battleName;
+    }
+}
+
+void MonsterListView::setBattleName(const QString &value)
+{
+    switch (purpose)
+    {
+    case MonsterListView::BOX:
+        return;
+    case MonsterListView::REQUEST:
+        battleName = value;
+    }
 }

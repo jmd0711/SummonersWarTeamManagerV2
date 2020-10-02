@@ -26,6 +26,12 @@ public:
     explicit MonsterListView(Profile *pr, Purpose pu, QWidget *parent = nullptr);
     ~MonsterListView();
 
+    QString getBattleName() const;
+    void setBattleName(const QString &value);
+
+    int getTeamIndex() const;
+    void setTeamIndex(int value);
+
 public slots:
 
 
@@ -56,6 +62,10 @@ private:
 
     int maxColumns = 10;
     int buttonCount = 0;
+
+    //  Not used for monsterbox
+    QString battleName;
+    int teamIndex;
 };
 
 #endif // MONSTERLISTVIEW_H

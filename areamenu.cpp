@@ -32,6 +32,7 @@ AreaMenu::AreaMenu(int index, QVector<QString> battleNames, TeamManager *parent)
             row++;
         }
         QPushButton *button = new QPushButton(this);
+        button->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         button->setText(battleName);
         connect(button, &QPushButton::released, [parent, index, count]() {
             parent->setPage(index + count);

@@ -25,6 +25,10 @@ public:
 
     void removeIndex(int monsterIndex);
 
+    bool exists(int monsterIndex);
+
+    QVector<int> getMonsterIndexes() const;
+
 private:
     QString battle_m;
     QString teamName_m;

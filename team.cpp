@@ -54,3 +54,13 @@ void Team::removeIndex(int monsterIndex)
 {
     monsterIndexes_m.erase(std::remove(monsterIndexes_m.begin(), monsterIndexes_m.end(), monsterIndex), monsterIndexes_m.end());
 }
+
+bool Team::exists(int monsterIndex)
+{
+    return (std::find(monsterIndexes_m.begin(), monsterIndexes_m.end(), monsterIndex) != monsterIndexes_m.end());
+}
+
+QVector<int> Team::getMonsterIndexes() const
+{
+    return monsterIndexes_m;
+}
