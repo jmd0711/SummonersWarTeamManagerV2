@@ -22,4 +22,5 @@ Installer https://github.com/jmd0711/SummonersWarTeamManagerV2/releases/tag/2.0
 * Probably a lot more
 
 Images are owned by Com2Us
+
 Data is gathered from SWARFARM API
